@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.radbuilder</groupId>
-    <name>EmojiChat Parent</name>
-    <artifactId>emojichat-parent</artifactId>
-    <version>1.8.3</version>
-    <packaging>pom</packaging>
+    <parent>
+        <groupId>io.github.radbuilder</groupId>
+        <artifactId>emojichat-parent</artifactId>
+        <version>1.8.4</version>
+    </parent>
 
     <properties>
         <project.java.version>1.8</project.java.version>
@@ -16,62 +16,52 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
-    <modules>
-        <module>plugin</module>
-    </modules>
-
-    <repositories>
-        <!-- Spigot -->
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-        </repository>
-        <!-- DiscordSRV -->
-        <!--<repository>-->
-            <!--<id>Scarsz-Jenkins</id>-->
-            <!--<url>https://ci.scarsz.me/plugin/repository/everything/?guest=1</url>-->
-        <!--</repository>-->
-        <!-- DiscordSRV Backup Repo -->
-        <repository>
-            <id>Scarsz-Nexus</id>
-            <url>https://nexus.scarsz.me/content/groups/public/</url>
-        </repository>
-        <!-- MVdWPlaceholderAPI -->
-        <repository>
-            <id>mvdw-software</id>
-            <name>MVdW Public Repositories</name>
-            <url>http://repo.mvdw-software.be/content/groups/public/</url>
-        </repository>
-        <!-- PlaceholderAPI -->
-        <repository>
-            <id>placeholderapi</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-        <!-- TelegramChat -->
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
+    <name>EmojiChat Plugin</name>
+    <artifactId>emojichat-plugin</artifactId>
+    <version>1.8.4</version>
+    <packaging>jar</packaging>
 
     <build>
-        <defaultGoal>clean package install -Dmaven.wagon.http.ssl.insecure=true</defaultGoal>
-        <finalName>${project.name}</finalName>
-        <sourceDirectory>src/main/java</sourceDirectory>
+        <directory>../target</directory>
+        <finalName>EmojiChat</finalName>
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>plugin.yml</include>
+                    <include>config.yml</include>
+                    <include>list.txt</include>
+                    <include>hash.1.txt</include>
+                    <include>hash.2.txt</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <artifactSet>
+                        <includes>
+                            <include>io.github.radbuilder.emojichat</include>
+                        </includes>
+                    </artifactSet>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
                 <configuration>
                     <archive>
                         <addMavenDescriptor>false</addMavenDescriptor>
@@ -80,4 +70,46 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.16.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.discordsrv</groupId>
+            <artifactId>discordsrv</artifactId>
+            <version>1.21.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.DiscordSRV</groupId>
+            <artifactId>Staff-Chat</artifactId>
+            <version>1.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>be.maximvdw</groupId>
+            <artifactId>MVdWPlaceholderAPI</artifactId>
+            <version>3.1.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.spigotmc</groupId>
+                    <artifactId>spigot</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.10.9</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.mastercake10</groupId>
+            <artifactId>TelegramChat</artifactId>
+            <version>1.0.14</version>
+        </dependency>
+    </dependencies>
 </project>
